@@ -45,43 +45,63 @@ def get_tv():
     return SamsungTVWS(host=FRAME_IP, port=8002, token_file=TOKEN_FILE)
 
 
-def atv_on():
+def atv_on(max_retries=5, atv_addr="192.168.68.80"):
     """
-    Check if Apple TV is on using pyatv's CLI (atvremote).
-
-    Returns:
-        True if power state is "On"
-        False if "Off" / "Standby" / unknown after a couple of retries
+    Return True if Apple TV is ON, False otherwise.
+    Strategy:
+      1) Try Companion a couple of times (fast + accurate).
+      2) If that fails, try AirPlay (more tolerant when ATV is sleepy).
+      3) Silence stderr to avoid noisy asyncio tracebacks in logs.
+      4) Timeout each call so we never block the main loop.
     """
-    retries = 0
-    while True:
+    def _probe(proto: str) -> str:
         try:
-            out = subprocess.check_output(
+            return subprocess.check_output(
                 [
                     sys.executable,
                     "-m",
                     "pyatv.scripts.atvremote",
                     "--id",
                     ATV_ID,
+                    "--address",
+                    atv_addr,            # skip discovery
+                    "--protocol",
+                    proto,               # "companion" or "airplay"
                     "power_state",
                 ],
                 text=True,
+                timeout=5,
+                stderr=subprocess.DEVNULL,  # suppress pyatv's async tracebacks
             ).strip()
-        except subprocess.CalledProcessError:
-            out = ""
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
+            return ""
 
+    # First do a couple of Companion attempts (fast path)
+    for attempt in range(1, min(2, max_retries) + 1):
+        out = _probe("companion")
         if out:
-            # Handles formats like "PowerState.On" or "PowerState: On"
             if "On" in out:
                 return True
             if "Off" in out or "Standby" in out:
                 return False
+        if attempt > 1:
+            print(f"tv companion read failed (attempt {attempt}) -> {out!r}")
+        time.sleep(1)
 
-        retries += 1
-        if retries > 1:
-            print(f"tv power_state error, retrying ({retries}) -> got: {out!r}")
-            time.sleep(1)
+    # Then fallback to AirPlay for remaining attempts
+    for attempt in range(1, max_retries + 1):
+        out = _probe("airplay")
+        if out:
+            if "On" in out:
+                return True
+            if "Off" in out or "Standby" in out:
+                return False
+        if attempt > 1:
+            print(f"tv airplay read failed (attempt {attempt}) -> {out!r}")
+        time.sleep(1)
 
+    print(f"tv power_state unresolved after {max_retries} airplay attempts → assuming OFF")
+    return False
 
 def tv_status():
     """
