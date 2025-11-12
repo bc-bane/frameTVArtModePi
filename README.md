@@ -27,6 +27,7 @@ This small daemon monitors your Apple TV power state and triggers Art Mode relia
 ## 🌐 Network setup
 1. Connect your **Apple TV** and **Frame TV** to your router via **Ethernet**. (Wi-Fi *may* work if all devices are on the same subnet, but mesh networks can cause discovery failures.)  
 2. Assign **static local IPs** to both devices in your router’s admin panel. This ensures reliable communication between the Pi, Apple TV, and Frame TV.
+3. After Flashing my Pi and plugging it in I also assign it a static IP so that it is very easy to log into later
 
 ---
 
@@ -41,7 +42,7 @@ Flash using **balenaEtcher** or **Raspberry Pi Imager**, then boot and complete 
 ### 2️⃣ Enable SSH (optional GUI-less setup)
 ```bash
 sudo apt update && sudo apt install -y openssh-server
-ssh youruser@orangepi.local
+ssh youruser@orangepi.local 
 ```
 
 ### 3️⃣ Create Python virtual environment
