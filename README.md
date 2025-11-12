@@ -8,14 +8,45 @@ Automatically return your **2024+ Samsung Frame TV** to **Art Mode** when your *
 
 ---
 
+Do you have an Apple TV that forces your Samsung Frame TV to turn off to a black screen instead of into Art mode?
+Do you have a spare raspberry pi over there with nothing to do?
+Well fear not now you can put it to use and dedicate that pi to being a little worker that flips your Frame TV into Art Mode anytime it notices that the Apple TV turns off.
+
 ## 🧩 Why this exists
 Newer Frame TVs (2024 models onward) no longer return to **Art Mode** automatically when powered off via HDMI-CEC (for example, when an Apple TV sleeps).  
-This small daemon monitors your Apple TV power state and triggers Art Mode reliably after shutdown — without breaking CEC or motion-sensor features.
-Many have suggestion using Samsungs smart things integration to force the TV into art mode when it turns off, but after having tried that route the TV 
-eventually begins to experience very strange issues. After a couple months I could no longer access menus on the TV it became very buggy and I learned
-on forums that the root cause was the smart things routine to force art mode. This completely bypasses those issues by dedicating a small Pi pc to watching
-the Apple TV power state and using that to force the Frame TV into Art Mode. Feels like overkill, feels silly, but I was just so tired of having a TV that 
-I bought to be art that was constantly just showing a black screen.
+This small daemon monitors your Apple TV power state and triggers Art Mode reliably after shutdown.
+
+---
+
+## Why not use a SmartThings Automations
+
+A commonly suggested workaround is to use a **SmartThings routine** to force the Samsung *The Frame* back into Art Mode whenever it’s turned off.  
+Unfortunately, this approach has multiple drawbacks:
+
+- **Motion Sensor & Night Mode Conflict**  
+  Because the routine activates whenever the TV turns off, it overrides the built-in motion sensor and Night Mode behavior.  
+  The TV may immediately turn back on (in Art Mode) even when it should stay off.
+
+- **HDMI-CEC / Anynet+ Instability**  
+  Users report that repeated SmartThings automations can cause HDMI-CEC (Anynet+) to become unreliable or break entirely —  
+  volume controls stop responding, inputs fail to switch, and in some cases the TV requires a factory reset.  
+
+  > “When powering down the Apple TV with the Siri remote, the Frame TV shuts off but does not go into Art Mode.”  
+  > — [Samsung Community Thread](https://us.community.samsung.com/t5/QLED-and-The-Frame-TVs/Apple-TV-remote-Art-Mode/td-p/3301453)
+
+  > “Frame TV automatically turns on in Art Mode … it may be due to SmartThings.”  
+  > — [Samsung Support Article](https://www.samsung.com/us/support/troubleshooting/TSG01216243/)
+
+  > “There is no option to turn the Frame directly into Art Mode via a SmartThings scene.”  
+  > — [SmartThings Community Discussion](https://community.smartthings.com/t/make-a-scene-to-art-mode-using-smartthings-and-the-frame-tv/197103)
+
+- **Unintended Flips / Boot Loops**  
+  Because SmartThings remains active while the TV is off, the Frame may unintentionally wake itself — sometimes repeatedly.  
+  This can cause increased power usage, wear on components, and erratic “phantom wake” behavior.
+
+Because of these issues, the SmartThings automation path tends to be fragile for the Frame + Apple TV use-case.  
+This project offers a **more reliable alternative** by using direct network control via WebSocket/API,  
+avoiding SmartThings entirely while preserving motion and CEC functionality.
 
 ---
 
