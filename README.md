@@ -11,6 +11,11 @@ Automatically return your **2024+ Samsung Frame TV** to **Art Mode** when your *
 ## 🧩 Why this exists
 Newer Frame TVs (2024 models onward) no longer return to **Art Mode** automatically when powered off via HDMI-CEC (for example, when an Apple TV sleeps).  
 This small daemon monitors your Apple TV power state and triggers Art Mode reliably after shutdown — without breaking CEC or motion-sensor features.
+Many have suggestion using Samsungs smart things integration to force the TV into art mode when it turns off, but after having tried that route the TV 
+eventually begins to experience very strange issues. After a couple months I could no longer access menus on the TV it became very buggy and I learned
+on forums that the root cause was the smart things routine to force art mode. This completely bypasses those issues by dedicating a small Pi pc to watching
+the Apple TV power state and using that to force the Frame TV into Art Mode. Feels like overkill, feels silly, but I was just so tired of having a TV that 
+I bought to be art that was constantly just showing a black screen.
 
 ---
 
