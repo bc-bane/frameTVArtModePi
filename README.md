@@ -60,12 +60,12 @@ pip install pyatv samsungtvws urllib3
 ### 5️⃣ Pair with Apple TV
 Scan for your Apple TV (replace IP as needed):
 ```bash
-python -m pyatv.scripts.atvremote --scan-hosts 192.168.68.80 scan
+python -m pyatv.scripts.atvremote --scan-hosts 192.168.68.80 scan # Replace with your Apple TV's static IP
 ```
 
 Run the pairing wizard:
 ```bash
-python -m pyatv.scripts.atvremote --scan-hosts 192.168.68.80 wizard
+python -m pyatv.scripts.atvremote --scan-hosts 192.168.68.80 wizard # Replace with your Apple TV's static IP
 ```
 
 Copy the resulting **Apple TV Identifier (UUID)** for later.
@@ -74,7 +74,7 @@ Copy the resulting **Apple TV Identifier (UUID)** for later.
 Run inside a Python REPL:
 ```python
 from samsungtvws import SamsungTVWS
-tv = SamsungTVWS(host="192.168.68.78", port=8002, token_file="frame_token.txt")
+tv = SamsungTVWS(host="192.168.68.78", port=8002, token_file="frame_token.txt") # Replace with your Frame TV's static IP
 tv.shortcuts().power()  # Accept the pairing prompt on the TV
 ```
 
@@ -89,7 +89,7 @@ cd frameTVArtModePi
 ### 8️⃣ Edit configuration
 Edit `watcher.py` and set:
 ```python
-FRAME_IP  = "192.168.68.78"              # Replace with your Frame TV's IP
+FRAME_IP  = "192.168.68.78"              # Replace with your Frame TV's static IP
 TOKEN_FILE = "/home/youruser/frame_token.txt"  # Confirm file location
 ATV_ID     = "YOUR-APPLE-TV-ID"          # Replace with the Apple TV ID from earlier
 ```
