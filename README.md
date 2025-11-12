@@ -159,15 +159,6 @@ sudo journalctl -u framewatcher -n 50
 
 ---
 
-## 🔍 Performance
-**Tested on Orange Pi Zero 3**
-
-| Metric     | Typical  |
-|-----------|----------|
-| CPU usage | 3–5 %    |
-| RAM usage | 70–90 MB |
-| Idle load | ~0.1     |
-
 Monitor live:
 ```bash
 htop
